@@ -10,11 +10,17 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "dayspan-vuetify": "^0.4.0",
+    "firebase": "^7.12.0",
+    "moment": "^2.25.3",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.1",
     "vue-router": "^3.1.6",
+    "vue-textarea-autosize": "^1.1.1",
+    "vuefire": "^2.2.2",
+    "vuetify": "^2.3.6",
     "vuex": "^3.1.3"
   },
   "devDependencies": {
@@ -41,10 +47,13 @@
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
     "typescript": "~3.8.3",
-    "vue-template-compiler": "^2.6.11"
+    "vue-cli-plugin-vuefire": "^1.0.2",
+    "vue-cli-plugin-vuetify": "~2.0.7",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.3.0"
   },
   "eslintConfig": {
-    "root": true,
+    "root": false,
     "env": {
       "node": true
     },
@@ -58,7 +67,13 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {},
+    "rules": {
+      "vue/no-async-in-computed-properties": "off",
+      "vue/no-dupe-keys": "off",
+      "vue/no-duplicate-attributes": "off",
+      "vue/no-parsing-error": "off",
+      "vue/no-reserved-keys": "off"
+    },
     "overrides": [
       {
         "files": [
