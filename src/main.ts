@@ -4,11 +4,12 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
-import { firestorePlugin } from "vuefire";
+import { auth } from './firebase'
+
 import VueTextareaAutosize from "vue-textarea-autosize";
 
 Vue.use(VueTextareaAutosize);
-Vue.use(firestorePlugin);
+
 
 Vue.config.productionTip = false;
 const ignoreWarnMessage =
@@ -22,9 +23,14 @@ Vue.config.warnHandler = function(msg, vm, trace) {
   }
 };
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount("#app");
+let app
+auth.onAuthStateChanged(() => {
+  if (!app) {
+    new Vue({
+      router,
+      store,
+      vuetify,
+      render: h => h(App)
+    }).$mount("#app");
+  }
+})

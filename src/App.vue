@@ -1,9 +1,9 @@
 <template>
 <div id="app">
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer v-model="drawer" app v-if="isLoggedIn">
       <v-list dense>
-        <v-list-item link>
+        <v-list-item link to="/">
           <v-list-item-action>
             <v-icon>mdi-home</v-icon>
           </v-list-item-action>
@@ -11,12 +11,20 @@
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link to="/register">
           <v-list-item-action>
-            <v-icon>mdi-email</v-icon>
+            <v-icon>mdi-account-plus</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Contact</v-list-item-title>
+            <v-list-item-title>Register</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link @click="logout">
+          <v-list-item-action>
+            <v-icon>mdi-account-arrow-right</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -27,12 +35,12 @@
       color="indigo"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" v-if="isLoggedIn"></v-app-bar-nav-icon>
+      <v-toolbar-title>Booko</v-toolbar-title>
     </v-app-bar>
 
     <v-main>
-        <router-view />
+        <router-view v-on:update-drawer="updateDrawer" />
     </v-main>
     <v-footer
       color="indigo"
@@ -46,12 +54,33 @@
 
 <script>
 import Vue from "vue";
+import { auth } from '@/firebase'
 export default Vue.extend({
   name: "App",
-
+  
   data: () => ({
-    drawer: null
-  })
+    drawer: false
+  }),
+  mounted() {
+
+  },
+  computed: {
+    userLogedIn () {
+      return this.$store.getters.user;
+    },
+
+    isLoggedIn() {
+      return this.userLogedIn ? true : false;
+    }
+  },
+  methods: {
+    updateDrawer(state) {
+      this.drawer = state;
+    },
+    logout() {
+      this.$store.dispatch('signOutAction')
+    }
+  }
 });
 </script>
 

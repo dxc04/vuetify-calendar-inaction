@@ -1,33 +1,103 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import { db } from "@/db.js";
-import moment from "moment";
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { auth } from '@/firebase'
+import router from '../router/index';
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
+
   state: {
-    events: []
+    user: null,
+    status: null,
+    error: null
+
   },
   mutations: {
-    setEvents: (state, events) => {
-      state.events = events;
+
+    setUser (state, payload) {
+      state.user = payload
+    },
+
+    removeUser (state) {
+      state.user = null
+    },
+
+    setStatus (state, payload) {
+      state.status = payload
+    },
+
+    setError (state, payload) {
+      state.error = payload
     }
+
   },
   actions: {
-    setEvents: async context => {
-      const snapshot: any = await db.collection("calEvent").get();
-      const events: any[] = [];
-      snapshot.forEach((doc: { data: () => any; id: any }) => {
-        const appData = doc.data();
-        appData.id = doc.id;
-        /*         appData.start = moment(appData.start).format("YYYY-MM-DD")
-        appData.end = moment(appData.end).format("YYYY-MM-DD") */
-        events.push(appData);
-      });
-      console.log(events, "dixie");
-      context.commit("setEvents", events);
+    signUpAction ({ commit }, payload) {
+      commit('setStatus', 'loading')
+      auth.createUserWithEmailAndPassword(payload.email, payload.password)
+        .then((response) => {
+          alert('Success, `${response.user.email registered!}`')
+          // response will have user
+          // user will have uid will be updated to the state
+          // commit('setUser', response.user.uid)
+          commit('setStatus', 'success')
+          commit('setError', null)
+        })
+        .catch((error) => {
+          commit('setStatus', 'failure')
+          commit('setError', error.message)
+        })
+    },
+
+    signInAction ({ commit }, payload) {
+      auth.signInWithEmailAndPassword(payload.email, payload.password)
+        .then((response) => {
+          commit('setUser', auth.currentUser)
+          commit('setStatus', 'success')
+          commit('setError', null)
+
+          if (router.currentRoute.path === '/login') {
+            router.push('/')
+          }
+        })
+        .catch((error) => {
+          commit('setStatus', 'failure')
+          commit('setError', error.message)
+        })
+    },
+
+    signOutAction ({ commit }) {
+      auth.signOut()
+        .then((response) => {
+          commit('setUser', null)
+          commit('setStatus', 'success')
+          commit('setError', null)
+          router.push('/login')
+        })
+        .catch((error) => {
+          commit('setStatus', 'failure')
+          commit('setError', error.message)
+        })
+    },
+
+    setUser({commit}, user) {
+      commit('setUser', user)
     }
   },
-  modules: {}
-});
+
+  getters: {
+
+    status (state) {
+      return state.status
+    },
+
+    user (state) {
+      return state.user
+    },
+
+    error (state) {
+      return state.error
+    }
+  }
+})

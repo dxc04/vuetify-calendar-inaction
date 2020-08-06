@@ -1,7 +1,8 @@
 // Conveniently import this file anywhere to use db
 
 import firebase from "firebase/app";
-import "firebase/firestore";
+import 'firebase/auth'
+import 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_FBApiKey,
@@ -14,6 +15,10 @@ const firebaseConfig = {
   measurementId: process.env.VUE_APP_FBMeasurementId
 };
 
-export const db = firebase.initializeApp(firebaseConfig).firestore();
+const db = firebase.initializeApp(firebaseConfig).firestore();
+const auth = firebase.auth()
 
-
+export {
+  db,
+  auth
+}
