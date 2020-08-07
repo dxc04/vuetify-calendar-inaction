@@ -27,3 +27,8 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+Demo Site
+https://booko-83f8c.web.app/
+email:dixie.atay@gmail.com
+password: qwerty
